@@ -35,14 +35,14 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     const details = {
       displayItems: [{
         label: 'Playstation VR',
-        amount: { currency: 'TWD', value: '2899.00' }
+        amount: { currency: 'TWD', value: '10.00' }
       }, {
         label: 'Cupom Promocional: XPTO',
         amount: { currency: 'TWD', value: '-9.00' }
       }],
       total: {
         label: 'Total',
-        amount: { currency: 'TWD', value : '2890.00' }
+        amount: { currency: 'TWD', value : '10.00' }
       }
     };
   
