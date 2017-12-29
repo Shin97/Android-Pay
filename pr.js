@@ -35,14 +35,14 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     const details = {
       displayItems: [{
         label: 'Playstation VR',
-        amount: { currency: 'BRL', value: '2899.00' }
+        amount: { currency: 'TWD', value: '2899.00' }
       }, {
         label: 'Cupom Promocional: XPTO',
-        amount: { currency: 'BRL', value: '-9.00' }
+        amount: { currency: 'TWD', value: '-9.00' }
       }],
       total: {
         label: 'Total',
-        amount: { currency: 'BRL', value : '2890.00' }
+        amount: { currency: 'TWD', value : '2890.00' }
       }
     };
   
@@ -63,19 +63,19 @@ document.querySelector('#checkout').addEventListener('click', () =>{
         const shippingOption = {
           id: '',
           label: '',
-          amount: {currency: 'BRL', value: '0.00'},
+          amount: {currency: 'TWD', value: '0.00'},
           selected: true
         };
   
         if (request.shippingAddress.region === 'SP') {
           shippingOption.id = 'mg';
           shippingOption.label = 'Frete Grátis';
-          details.total.amount.value = '2890.00';
+          details.total.amount.value = '10.00';
         } else {
           shippingOption.id = 'world';
           shippingOption.label = 'Frete Express';
           shippingOption.amount.value = '5.00';
-          details.total.amount.value = '2895.00';
+          details.total.amount.value = '10.00';
         }
   
         details.displayItems.splice(2, 1, shippingOption);
