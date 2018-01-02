@@ -12,17 +12,19 @@
 </head>
 <body>
 
-  <h1>Android Pay Demo</h1>
+  <h3>Background</h3>
+<p>
+  <a href="https://github.com/w3c/browser-payment-api">PaymentRequest</a> lets
+  you accept payment from different payment methods.
+</p>
 
-  <h4>Android Pay 開發</h4>
-  <ul>
-    <li>支援 Chrome for Android 53 、 Microsoft Edge、ios 請用Chrome.</li>
-  </ul>
+<p>
+  This sample accepts Android Pay payments and does not request shipping
+  information.
+</p>
 
-  <p id="feedback" style="color: red;"></p>
-
-  <button id="checkout"><img src="logo-andriod-pay.png"></button>
-  <script src="pr.js" async></script>
-
+<div><button id="buyButton">Buy</button></div>
+<div><pre id="result"></pre></div>
+<script src="pr.js"></script>
 </body>
 </html>

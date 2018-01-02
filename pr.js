@@ -1,124 +1,113 @@
-document.querySelector('#checkout').addEventListener('click', () =>{
-
-  var products = ["Playstation 4", "Playstation VR", "Cupom Promocional: XPTO"];
-  var price = [12980, 14980, -1000];
-  var total = 0;
-      price.forEach(function(element) {
-        total += element;
-      })
-
-    //瀏覽器檢查
-    if (!window.PaymentRequest) {
-      const msg = '不支援 Android Pay!(支援 Chrome for Android 53 ，ios 請用Chrome) :(';
-      document.querySelector('#feedback').innerHTML = msg;
-      console.log(msg);
-      return;
-    }
-  
-    //支援的信用卡形式
-    const supportedInstruments = [{
-        supportedMethods: ['visa', 'mastercard', 'amex', 'discover','diners', 'jcb', 'unionpay']
-    },{
-      // Integração com Android Pay
-      supportedMethods: ['https://android.com/pay'],
-      data: {
-        // Seu merchantId deve ser em https://androidpay.developers.google.com/signup
-        merchantId: '02510116604241796260',
-        environment: 'TEST',
-        // Bandeiras de cartão de crédito aceitos no Android Pay
-        allowedCardNetworks: ['AMEX', 'MASTERCARD', 'VISA', 'DISCOVER'],
-        paymentMethodTokenizationParameters: {
-          tokenizationType: 'GATEWAY_TOKEN',
-          parameters: {
-            'gateway': 'stripe',
-            // Coloque aqui sua chave pública do Stripe
-            'stripe:publishableKey': 'pk_live_fD7ggZCtrB0vJNApRX5TyJ9T',
-            'stripe:version': '2016-07-06'
-          }
-        }
-      }
-    }];
-  
-    // Detalhes para Checkout
-    const details = {
-      
-      displayItems: [{
-        label: products[0],
-        amount: { currency: 'TWD', value: price[0] }
-      }, {
-        label: products[1],
-        amount: { currency: 'TWD', value: price[1] }
-      }, {
-        label: products[2],
-        amount: { currency: 'TWD', value: price[2] }
-      }],
-      total: {
-        label: 'Total',
-        amount: { currency: 'TWD', value : total }
-      }
-    };
-  
-    // Configurando que vou querer coletar o email, endereço e o tipo de frete que será cobrado do usuário
-    const options = {
-      requestShipping: true,
-      requestPayerEmail: true
-    };
-  
-    // Com as configurações previamente coletadas da transação
-    // Crie uma instância do `PaymentRequest`
-    const request = new PaymentRequest(supportedInstruments, details, options);
-  
-    // Configura os tipos de frete de acordo com a região que o usuário está
-    request.addEventListener('shippingaddresschange', function(evt) {
-      evt.updateWith(new Promise(function(resolve) {
-  
-        const shippingOption = {
-          id: '',
-          label: '',
-          amount: {currency: 'TWD', value: '0.00'},
-          selected: true
-        };
-  
-        if (request.shippingAddress.region === 'SP') {
-          shippingOption.id = 'mg';
-          shippingOption.label = 'Frete Grátis';
-          details.total.amount.value = '10.00';
-        } else {
-          shippingOption.id = 'world';
-          shippingOption.label = 'Frete Express';
-          shippingOption.amount.value = '5.00';
-          details.total.amount.value = '10.00';
-        }
-  
-        details.displayItems.splice(2, 1, shippingOption);
-        details.shippingOptions = [shippingOption];
-  
-        resolve(details);
-      }));
-    });
-  
-    // E finalmente exiba a interface nativa através do método `.show()`
-    request.show()
-    .then(result => {
-      // Demo: Submetendo dados para servidor
-      return fetch('/pay', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
+/**
+ * Builds PaymentRequest for Android Pay, but does not show any UI yet. If you
+ * encounter issues when running your own copy of this sample, run 'adb logcat |
+ * grep Wallet' to see detailed error messages.
+ *
+ * @return {PaymentRequest} The PaymentRequest object.
+ */
+function initPaymentRequest() {
+  let supportedInstruments = [{
+    supportedMethods: ['https://android.com/pay'],
+    data: {
+      merchantName: 'Android Pay Demo',
+      // Place your own Android Pay merchant ID here. The merchant ID is tied to
+      // the origin of the website.
+      merchantId: '00184145120947117657',
+      // If you do not yet have a merchant ID, uncomment the following line.
+      // environment: 'TEST',
+      allowedCardNetworks: ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA'],
+      paymentMethodTokenizationParameters: {
+        tokenizationType: 'GATEWAY_TOKEN',
+        parameters: {
+          'gateway': 'stripe',
+          // Place your own Stripe publishable key here. Use a matching Stripe
+          // secret key on the server to initiate a transaction.
+          'stripe:publishableKey': 'pk_live_lNk21zqKM2BENZENh3rzCUgo',
+          'stripe:version': '2016-07-06',
         },
-        body: JSON.stringify(result.toJSON())
-      }).then(response => {
-        // Exiba o status sobre o pagamento
-        if (response.status === 200) {
-          // Pagamento foi um sucesso
-          return result.complete('success');
-        } else {
-          // Pagamento falhou
-          return result.complete('fail');
-        }
-      }).catch(() => {
-        return result.complete('fail');
-      });
-    });
+      },
+    },
+  }];
+
+  let details = {
+    total: {label: 'Donation', amount: {currency: 'USD', value: '55.00'}},
+    displayItems: [
+      {
+        label: 'Original donation amount',
+        amount: {currency: 'USD', value: '65.00'},
+      },
+      {
+        label: 'Friends and family discount',
+        amount: {currency: 'USD', value: '-10.00'},
+      },
+    ],
+  };
+
+  return new PaymentRequest(supportedInstruments, details);
+}
+
+/**
+ * Invokes PaymentRequest for Android Pay.
+ *
+ * @param {PaymentRequest} request The PaymentRequest object.
+ */
+function onBuyClicked(request) {
+  request.show().then(function(instrumentResponse) {
+    sendPaymentToServer(instrumentResponse);
+  })
+  .catch(function(err) {
+    ChromeSamples.setStatus(err);
   });
+}
+
+/**
+ * Simulates processing the payment data on the server.
+ *
+ * @param {PaymentResponse} instrumentResponse The payment information to
+ * process.
+ */
+function sendPaymentToServer(instrumentResponse) {
+  // There's no server-side component of these samples. No transactions are
+  // processed and no money exchanged hands. Instantaneous transactions are not
+  // realistic. Add a 2 second delay to make it seem more real.
+  window.setTimeout(function() {
+    instrumentResponse.complete('success')
+        .then(function() {
+          document.getElementById('result').innerHTML =
+              instrumentToJsonString(instrumentResponse);
+        })
+        .catch(function(err) {
+          ChromeSamples.setStatus(err);
+        });
+  }, 2000);
+}
+
+/**
+ * Converts the payment instrument into a JSON string.
+ *
+ * @param {PaymentResponse} instrument The instrument to convert.
+ * @return {string} The JSON string representation of the instrument.
+ */
+function instrumentToJsonString(instrument) {
+  if (instrument.toJSON) {
+    return JSON.stringify(instrument, undefined, 2);
+  } else {
+    return JSON.stringify({
+      methodName: instrument.methodName,
+      details: instrument.details,
+    }, undefined, 2);
+  }
+}
+
+const payButton = document.getElementById('buyButton');
+payButton.setAttribute('style', 'display: none;');
+if (window.PaymentRequest) {
+  let request = initPaymentRequest();
+  payButton.setAttribute('style', 'display: inline;');
+  payButton.addEventListener('click', function() {
+    onBuyClicked(request);
+    request = initPaymentRequest();
+  });
+} else {
+  ChromeSamples.setStatus('This browser does not support web payments');
+}
