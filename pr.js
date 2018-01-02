@@ -1,4 +1,8 @@
 document.querySelector('#checkout').addEventListener('click', () =>{
+
+  var products = ["Playstation 4", "Playstation VR", "Cupom Promocional: XPTO"];
+  var price = [12980, 14980, -1000]
+
     if (!window.PaymentRequest) {
       // Caso entre nesta condicional, você pode ativar um checkout customizado de fallback
       const msg = 'Este browser não suporta a Payment Request API! :(';
@@ -34,15 +38,18 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     // Detalhes para Checkout
     const details = {
       displayItems: [{
-        label: 'Playstation VR',
-        amount: { currency: 'TWD', value: '10.00' }
+        label: products[0],
+        amount: { currency: 'TWD', value: price[0] }
       }, {
-        label: 'Cupom Promocional: XPTO',
-        amount: { currency: 'TWD', value: '-9.00' }
+        label: products[1],
+        amount: { currency: 'TWD', value: price[1] }
+      }, {
+        label: products[2],
+        amount: { currency: 'TWD', value: price[2] }
       }],
       total: {
         label: 'Total',
-        amount: { currency: 'TWD', value : '10.00' }
+        amount: { currency: 'TWD', value : price[0] + price[1] + price[2] }
       }
     };
   
