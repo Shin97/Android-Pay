@@ -1,17 +1,21 @@
 document.querySelector('#checkout').addEventListener('click', () =>{
 
   var products = ["Playstation 4", "Playstation VR", "Cupom Promocional: XPTO"];
-  var price = [12980, 14980, -1000]
+  var price = [12980, 14980, -1000];
+  var total = 0;
+      price.forEach(function(element) {
+        total += element;
+      })
 
+    //瀏覽器檢查
     if (!window.PaymentRequest) {
-      // Caso entre nesta condicional, você pode ativar um checkout customizado de fallback
-      const msg = 'Este browser não suporta a Payment Request API! :(';
+      const msg = '不支援 Android Pay!(支援 Chrome for Android 53 ，ios 請用Chrome) :(';
       document.querySelector('#feedback').innerHTML = msg;
       console.log(msg);
       return;
     }
   
-    // Métodos de pagamento suportados
+    //支援的信用卡形式
     const supportedInstruments = [{
         supportedMethods: ['visa', 'mastercard', 'amex', 'discover','diners', 'jcb', 'unionpay']
     },{
@@ -37,6 +41,7 @@ document.querySelector('#checkout').addEventListener('click', () =>{
   
     // Detalhes para Checkout
     const details = {
+      
       displayItems: [{
         label: products[0],
         amount: { currency: 'TWD', value: price[0] }
@@ -49,7 +54,7 @@ document.querySelector('#checkout').addEventListener('click', () =>{
       }],
       total: {
         label: 'Total',
-        amount: { currency: 'TWD', value : price[0] + price[1] + price[2] }
+        amount: { currency: 'TWD', value : total }
       }
     };
   
