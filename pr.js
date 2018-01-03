@@ -57,7 +57,8 @@ function onBuyClicked(request) {
   })
   .catch(function(err) {
     console.log(err)
-    ChromeSamples.setStatus(err);
+    alert(err)
+    //ChromeSamples.setStatus(err);
   });
 }
 
@@ -79,7 +80,8 @@ function sendPaymentToServer(instrumentResponse) {
         })
         .catch(function(err) {
           console.log(err)
-          ChromeSamples.setStatus(err);
+          alert(err)
+          //ChromeSamples.setStatus(err);
         });
   }, 2000);
 }
@@ -111,6 +113,7 @@ if (window.PaymentRequest) {
     request = initPaymentRequest();
   });
 } else {
-  ChromeSamples.setStatus('This browser does not support web payments');
+  //ChromeSamples.setStatus('This browser does not support web payments');
   console.log('This browser does not support')
+  alert('This browser does not support')
 }
