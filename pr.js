@@ -56,6 +56,7 @@ function onBuyClicked(request) {
     sendPaymentToServer(instrumentResponse);
   })
   .catch(function(err) {
+    console.log(err)
     ChromeSamples.setStatus(err);
   });
 }
@@ -77,6 +78,7 @@ function sendPaymentToServer(instrumentResponse) {
               instrumentToJsonString(instrumentResponse);
         })
         .catch(function(err) {
+          console.log(err)
           ChromeSamples.setStatus(err);
         });
   }, 2000);
