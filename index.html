@@ -11,20 +11,132 @@
   <title>Android Pay Demo</title>
 </head>
 <body>
-
-  <h3>Background</h3>
-<p>
-  <a href="https://github.com/w3c/browser-payment-api">PaymentRequest</a> lets
-  you accept payment from different payment methods.
-</p>
-
-<p>
-  This sample accepts Android Pay payments and does not request shipping
-  information.
-</p>
-<div id="output" class="output"></div>
-<div><button id="buyButton">Buy</button></div>
-<div><pre id="result"></pre></div>
-<script src="pr.js"></script>
+  <div id="container">
+    <button>Checkout</button>
+  </div>
+  <script>
+  var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
+  var allowedCardNetworks = ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA'];
+  
+  /**
+   * Initialize a Google Payment API client
+   *
+   * @returns {google.payments.api.PaymentsClient} Google Payment API client
+   */
+  function getPaymentsClient() {
+    return (new google.payments.api.PaymentsClient({environment: 'TEST'}));
+  }
+  
+  /**
+   * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
+   */
+  function initializeGooglePaymentsClient() {
+    var paymentsClient = getPaymentsClient();
+    paymentsClient.isReadyToPay({allowedPaymentMethods: allowedPaymentMethods})
+        .then(function(response) {
+          if (response.result) {
+            addGooglePaymentButton();
+            prefetchGooglePaymentData();
+          }
+        })
+        .catch(function(err) {
+          // show error in developer console for debugging
+          console.error(err);
+        });
+  }
+  
+  /**
+   * Add a Google payment button alongside an existing checkout button
+   */
+  function addGooglePaymentButton() {
+    var button = document.createElement('button');
+    button.id = 'google-pay';
+    button.appendChild(document.createTextNode('Google Pay'));
+    button.addEventListener('click', onGooglePaymentButtonClicked);
+    document.getElementById('container').appendChild(button);
+  }
+  
+  /**
+   * Configure support for the Google Payment API
+   *
+   * @see {@link https://developers.google.com/payments/web/object-reference#PaymentDataRequest|PaymentDataRequest}
+   * @returns {object} PaymentDataRequest fields
+   */
+  function getGooglePaymentDataConfiguration() {
+    return {
+      // a merchant ID is available after approval by Google
+      merchantId: '01234567890123456789',
+      paymentMethodTokenizationParameters: {
+        tokenizationType: 'PAYMENT_GATEWAY',
+        // Check with your payment gateway on the parameters to pass.
+        // @see {@link https://developers.google.com/payments/web/object-reference#gateway}
+        parameters: {}
+      },
+      allowedPaymentMethods: allowedPaymentMethods,
+      cardRequirements: {allowedCardNetworks: allowedCardNetworks}
+    };
+  }
+  
+  /**
+   * Provide Google Payment API with a payment amount, currency, and amount status
+   *
+   * @see {@link https://developers.google.com/payments/web/object-reference#TransactionInfo|TransactionInfo}
+   * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+   */
+  function getGoogleTransactionInfo() {
+    return {
+      currencyCode: 'USD',
+      totalPriceStatus: 'FINAL',
+      // set to cart total
+      totalPrice: '1.00'
+    };
+  }
+  
+  /**
+   * Prefetch payment data to improve performance
+   */
+  function prefetchGooglePaymentData() {
+    var paymentDataRequest = getGooglePaymentDataConfiguration();
+    // transactionInfo must be set but does not affect cache
+    paymentDataRequest.transactionInfo = {
+      totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
+      currencyCode: 'USD'
+    };
+    var paymentsClient = getPaymentsClient();
+    paymentsClient.prefetchPaymentData(paymentDataRequest);
+  }
+  
+  /**
+   * Show Google Payment API chooser when Google buy button clicked
+   */
+  function onGooglePaymentButtonClicked() {
+    var paymentDataRequest = getGooglePaymentDataConfiguration();
+    paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+  
+    var paymentsClient = getPaymentsClient();
+    paymentsClient.loadPaymentData(paymentDataRequest)
+        .then(function(paymentData) {
+          // handle response
+          processPayment(paymentData);
+        })
+        .catch(function(err) {
+          // show error in developer console for debugging
+          console.error(err);
+        });
+  }
+  
+  /**
+   * Process payment data returned by the Google Payment API
+   *
+   * @param {object} paymentData response from Google Payment API after shopper approves payment
+   * @see {@link https://developers.google.com/payments/web/object-reference##paymentdata|PaymentData object reference}
+   */
+  function processPayment(paymentData) {
+    console.log(paymentData);
+  }
+  </script>
+  <script async
+    src="https://payments.developers.google.com/js/apis/pay.js"
+    onload="initializeGooglePaymentsClient()"></script>
 </body>
 </html>
