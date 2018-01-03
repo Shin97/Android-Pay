@@ -110,4 +110,5 @@ if (window.PaymentRequest) {
   });
 } else {
   ChromeSamples.setStatus('This browser does not support web payments');
+  console.log('This browser does not support')
 }
