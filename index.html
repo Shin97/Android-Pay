@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
   <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-  <title>Android Pay Demo</title>
+  <title>G Pay Demo</title>
 </head>
 <body>
 
@@ -57,7 +57,6 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          alert('Not support!');
           console.error(err);
         });
   }
@@ -107,7 +106,7 @@
    */
   function getGoogleTransactionInfo() {
     return {
-      currencyCode: 'USD',
+      currencyCode: 'TWD',
       totalPriceStatus: 'FINAL',
       // set to cart total
       totalPrice: '1.00'
@@ -143,6 +142,7 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
+          alert('err')
           console.error(err);
         });
   }
