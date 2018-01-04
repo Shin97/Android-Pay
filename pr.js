@@ -46,6 +46,9 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     }, {
       label: products[1],
       amount: { currency: 'TWD', value: prices[1] }
+    }, {
+      label: products[2],
+      amount: { currency: 'TWD', value: prices[2] }
     }],
     total: {
       label: '總金額',
