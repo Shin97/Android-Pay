@@ -20,9 +20,12 @@
   <button id="checkout"><img src="logo-andriod-pay.png"></button>
   <script src="pr.js" async></script>
 
+
+
   <div id="container">
     <button>Checkout</button>
   </div>
+
   <script>
   var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
   var allowedCardNetworks = ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA'];
@@ -74,12 +77,17 @@
   function getGooglePaymentDataConfiguration() {
     return {
       // a merchant ID is available after approval by Google
-      merchantId: '01234567890123456789',
+      merchantId: '02510116604241796260',
       paymentMethodTokenizationParameters: {
         tokenizationType: 'PAYMENT_GATEWAY',
         // Check with your payment gateway on the parameters to pass.
         // @see {@link https://developers.google.com/payments/web/object-reference#gateway}
-        parameters: {}
+        parameters: {
+          'gateway': 'stripe',
+          //公用key
+          'stripe:publishableKey': 'pk_live_fD7ggZCtrB0vJNApRX5TyJ9T',
+          'stripe:version': '2016-07-06'
+        }
       },
       allowedPaymentMethods: allowedPaymentMethods,
       cardRequirements: {allowedCardNetworks: allowedCardNetworks}
@@ -148,6 +156,6 @@
     src="https://payments.developers.google.com/js/apis/pay.js"
     onload="initializeGooglePaymentsClient()"></script>
 
-    
+
 </body>
 </html>
