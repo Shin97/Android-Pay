@@ -1,8 +1,9 @@
-var products = ['Playstation 4', 'Palystation VR', '折價-1000'];
-var prices = [12900,9900,-1000];
+var products = [{name:'Playstation 4', price:12900},
+                 {name:'Playstation VR', price:99000},
+                 {name:'折價$1000', price:-1000}];
 var total = 0;
-prices.forEach( function(element) {
-  total += element;
+products.forEach( function(element) {
+  total += element.price;
 } );
 
 /**
@@ -33,7 +34,7 @@ function buildPaymentRequest() {
     supportedMethods: ['basic-card'],
   }];
 
-  const details = {
+  var details = {
     total: {
       label: '總金額',
       amount: {
@@ -41,19 +42,7 @@ function buildPaymentRequest() {
         value: total,
       },
     },
-    displayItems: [{
-      label: products[0],
-      amount: {
-        currency: 'TWD',
-        value: prices[0],
-      },
-    }, {
-      label: products[1],
-      amount: {
-        currency: 'TWD',
-        value: prices[1],
-      },
-    }],
+    displayItems: [],
     modifiers: [{
       supportedMethods: ['basic-card'],
       data: {
@@ -94,6 +83,18 @@ function buildPaymentRequest() {
       }],
     }],
   };
+
+  products.forEach(function(element){
+    var element = {
+      label: element.name,
+      amount: {
+        currency: 'TWD',
+        value: element.price,
+      },
+    }
+    details.displayItems.push(element)
+  });
+  
 
   let request = null;
 
