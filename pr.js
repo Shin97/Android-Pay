@@ -1,29 +1,36 @@
+var product = ['Playstation 4', 'Palystation VR', '折價-1000'];
+var price = [12900,9900,-1000];
+var total = 0;
+price.forEach( function(element) {
+  total += element;
+} );
+
 document.querySelector('#checkout').addEventListener('click', () =>{
   if (!window.PaymentRequest) {
-    // Caso entre nesta condicional, você pode ativar um checkout customizado de fallback
-    const msg = 'Este browser não suporta a Payment Request API! :(';
+
+    const msg = '此瀏覽器不支援Payment Request API!';
     document.querySelector('#feedback').innerHTML = msg;
     console.log(msg);
     return;
   }
 
-  // Métodos de pagamento suportados
+  //支援付款方式
   const supportedInstruments = [{
       supportedMethods: ['visa', 'mastercard', 'amex', 'discover','diners', 'jcb', 'unionpay']
   },{
-    // Integração com Android Pay
+    //整合Android Pay
     supportedMethods: ['https://android.com/pay'],
     data: {
-      // Seu merchantId deve ser em https://androidpay.developers.google.com/signup
+      //要在https://androidpay.developers.google.com/signup申請merchantId
       merchantId: '02510116604241796260',
       environment: 'TEST',
-      // Bandeiras de cartão de crédito aceitos no Android Pay
+      //Android Pay接受的信用卡種類
       allowedCardNetworks: ['AMEX', 'MASTERCARD', 'VISA', 'DISCOVER'],
       paymentMethodTokenizationParameters: {
         tokenizationType: 'GATEWAY_TOKEN',
         parameters: {
           'gateway': 'stripe',
-          // Coloque aqui sua chave pública do Stripe
+          //公用key
           'stripe:publishableKey': 'pk_live_fD7ggZCtrB0vJNApRX5TyJ9T',
           'stripe:version': '2016-07-06'
         }
@@ -31,51 +38,51 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     }
   }];
 
-  // Detalhes para Checkout
+  //結帳細節
   const details = {
     displayItems: [{
-      label: 'Playstation VR',
-      amount: { currency: 'BRL', value: '2899.00' }
+      label: products[0],
+      amount: { currency: 'TWD', value: prices[0] }
     }, {
-      label: 'Cupom Promocional: XPTO',
-      amount: { currency: 'BRL', value: '-9.00' }
+      label: products[1],
+      amount: { currency: 'TWD', value: prices[1] }
     }],
     total: {
-      label: 'Total',
-      amount: { currency: 'BRL', value : '2890.00' }
+      label: '總金額',
+      amount: { currency: 'TWD', value : total }
     }
   };
 
-  // Configurando que vou querer coletar o email, endereço e o tipo de frete que será cobrado do usuário
+  //設定要向用戶收取運費的電子郵件，地址和類型
   const options = {
     requestShipping: true,
     requestPayerEmail: true
   };
 
-  // Com as configurações previamente coletadas da transação
-  // Crie uma instância do `PaymentRequest`
+  //使用之前收集的交易設定
+  //建立一個PaymentRequest
   const request = new PaymentRequest(supportedInstruments, details, options);
 
-  // Configura os tipos de frete de acordo com a região que o usuário está
+  //根據用戶所在的地區配置貨運類型
   request.addEventListener('shippingaddresschange', function(evt) {
     evt.updateWith(new Promise(function(resolve) {
 
       const shippingOption = {
         id: '',
         label: '',
-        amount: {currency: 'BRL', value: '0.00'},
+        amount: {currency: 'TWD', value: '0'},
         selected: true
       };
 
-      if (request.shippingAddress.region === 'SP') {
+      if (request.shippingAddress.region === '桃園市') {
         shippingOption.id = 'mg';
-        shippingOption.label = 'Frete Grátis';
-        details.total.amount.value = '2890.00';
+        shippingOption.label = '免運費';
+        details.total.amount.value = '1';
       } else {
         shippingOption.id = 'world';
-        shippingOption.label = 'Frete Express';
-        shippingOption.amount.value = '5.00';
-        details.total.amount.value = '2895.00';
+        shippingOption.label = '快遞';
+        shippingOption.amount.value = '5';
+        details.total.amount.value = '6';
       }
 
       details.displayItems.splice(2, 1, shippingOption);
@@ -85,10 +92,10 @@ document.querySelector('#checkout').addEventListener('click', () =>{
     }));
   });
 
-  // E finalmente exiba a interface nativa através do método `.show()`
+  //免運費最後通過show()方法顯示原生界面
   request.show()
   .then(result => {
-    // Demo: Submetendo dados para servidor
+    //Demo: 將數據提交給伺服器
     return fetch('/pay', {
       method: 'POST',
       credentials: 'include',
@@ -97,12 +104,12 @@ document.querySelector('#checkout').addEventListener('click', () =>{
       },
       body: JSON.stringify(result.toJSON())
     }).then(response => {
-      // Exiba o status sobre o pagamento
+      //查看付款狀態
       if (response.status === 200) {
-        // Pagamento foi um sucesso
+        //付款成功
         return result.complete('success');
       } else {
-        // Pagamento falhou
+        //付款失敗
         return result.complete('fail');
       }
     }).catch(() => {
