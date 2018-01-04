@@ -84,15 +84,16 @@ function buildPaymentRequest() {
     }],
   };
 
+  //填訂單資料
   products.forEach(function(element){
-    var element = {
+    var dItem = {
       label: element.name,
       amount: {
         currency: 'TWD',
         value: element.price,
       },
     }
-    details.displayItems.push(element)
+    details.displayItems.push(dItem)
   });
   
 
