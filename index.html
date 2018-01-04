@@ -57,6 +57,7 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
+          error(err)
           console.error(err);
         });
   }
@@ -142,7 +143,6 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          alert(err)
           error(err)
           console.error(err);
         });
@@ -155,6 +155,7 @@
    * @see {@link https://developers.google.com/payments/web/object-reference##paymentdata|PaymentData object reference}
    */
   function processPayment(paymentData) {
+    info(paymentData)
     console.log(paymentData);
   }
   </script>
