@@ -17,7 +17,8 @@
   </ul>
 
   <p id="feedback" style="color: red;"></p>
-  <button id="checkout">Pay</button>
+  <!-- <button id="checkout">Pay</button> -->
+  <button onclick="onBuyClicked()">Pay</button>
   <script src="pr.js" async></script>
 
 
@@ -25,6 +26,10 @@
   <div id="container">
     <button>Checkout</button>
   </div>
+
+  <!-- pr.js error message -->
+  <pre id="msg"></pre>
+
 
   <script>
   var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
