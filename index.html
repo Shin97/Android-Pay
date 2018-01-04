@@ -17,7 +17,7 @@
   </ul>
 
   <p id="feedback" style="color: red;"></p>
-  <button id="checkout"><img src="logo-andriod-pay.png"></button>
+  <button id="checkout">Pay</button>
   <script src="pr.js" async></script>
 
 
@@ -117,7 +117,7 @@
     // transactionInfo must be set but does not affect cache
     paymentDataRequest.transactionInfo = {
       totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-      currencyCode: 'USD'
+      currencyCode: 'TWD'
     };
     var paymentsClient = getPaymentsClient();
     paymentsClient.prefetchPaymentData(paymentDataRequest);
