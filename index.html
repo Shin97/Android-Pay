@@ -27,8 +27,7 @@
   </div>
 
   <script>
-  // var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
-  var allowedPaymentMethods = ['TOKENIZED_CARD'];
+  var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
   var allowedCardNetworks = ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA'];
   
   /**
@@ -54,7 +53,7 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          alert('Not support!')
+          alert('Not support!');
           console.error(err);
         });
   }
