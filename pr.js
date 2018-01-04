@@ -1,5 +1,5 @@
 var products = [{name:'Playstation 4', price:12900},
-                 {name:'Playstation VR', price:99000},
+                 {name:'Playstation VR', price:9900},
                  {name:'折價$1000', price:-1000}];
 var total = 0;
 products.forEach( function(element) {
