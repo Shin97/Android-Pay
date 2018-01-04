@@ -143,7 +143,7 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          error(err)
+          error(JSON.stringify(err))
           console.error(err);
         });
   }
