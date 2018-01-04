@@ -1,7 +1,7 @@
 var products = ['Playstation 4', 'Palystation VR', '折價-1000'];
 var prices = [12900,9900,-1000];
 var total = 0;
-price.forEach( function(element) {
+prices.forEach( function(element) {
   total += element;
 } );
 
