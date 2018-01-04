@@ -17,8 +17,8 @@
   </ul>
 
   <p id="feedback" style="color: red;"></p>
-  <!-- <button id="checkout">Pay</button> -->
-  <button onclick="onBuyClicked()"><img src="image/GPay_button-long.png"></button>
+  <!-- <button onclick="onBuyClicked()"><img src="image/GPay_button-long.png" width="128" height="35"></button> -->
+  <input type="button" onclick="onBuyClicked()" style="background-image:url(image/G_Pay.png);width:320px;height:132px;border: 2px solid #ccc;border-radius: 10px;">
   <script src="js/pr.js" async></script>
   <script src="js/util.js"></script>
 
@@ -28,6 +28,7 @@
 
   <!-- pr.js error message -->
   <pre id="msg"></pre>
+  <!-- <img src="https://developers.google.com/payments/images/brand-guidelines/payment-screen.png"> -->
 
   <script>
   var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
