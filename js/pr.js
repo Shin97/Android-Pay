@@ -44,51 +44,12 @@ function buildPaymentRequest() {
       },
     },
     displayItems: [],
-    modifiers: [{
-      supportedMethods: ['basic-card'],
-      data: {
-        supportedTypes: ['debit'],
-      },
-      total: {
-        label: 'Debit card discounted donation',
-        amount: {
-          currency: 'TWD',
-          value: '45.00',
-        },
-      },
-      additionalDisplayItems: [{
-        label: 'Debit card discount',
-        amount: {
-          currency: 'TWD',
-          value: '-10.00',
-        },
-      }],
-    }, {
-      supportedMethods: ['basic-card'],
-      data: {
-        supportedNetworks: ['mastercard'],
-      },
-      total: {
-        label: 'MasterCard discounted donation',
-        amount: {
-          currency: 'TWD',
-          value: '50.00',
-        },
-      },
-      additionalDisplayItems: [{
-        label: 'MasterCard discount',
-        amount: {
-          currency: 'TWD',
-          value: '-5.00',
-        },
-      }],
-    }],
   };
 
   //設定要向用戶收取運費的電子郵件，地址和類型
   const options = {
-    requestShipping: true,
-    requestPayerEmail: true
+    requestShipping: false,
+    requestPayerEmail: false
   };
 
   //填訂單資料
