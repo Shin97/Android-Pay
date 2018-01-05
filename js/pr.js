@@ -84,6 +84,12 @@ function buildPaymentRequest() {
     }],
   };
 
+  //設定要向用戶收取運費的電子郵件，地址和類型
+  const options = {
+    requestShipping: true,
+    requestPayerEmail: true
+  };
+
   //填訂單資料
   products.forEach(function(element){
     var dItem = {
@@ -100,7 +106,7 @@ function buildPaymentRequest() {
   let request = null;
 
   try {
-    request = new PaymentRequest(supportedInstruments, details);
+    request = new PaymentRequest(supportedInstruments, details, options);
     if (request.canMakePayment) {
       request.canMakePayment().then(function(result) {
         info(result ? 'Can make payment' : 'Cannot make payment');
