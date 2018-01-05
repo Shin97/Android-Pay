@@ -154,9 +154,9 @@
     var URLs="https://www.gift2u.com.tw/skm/api/api.android_pay.php";
 		$.ajax({
 			url: URLs,
-			data: {"Text":paymentToken},
+			data: {"JSON":paymentData},
 			type:"POST",
-			dataType:'text',
+			dataType:'json',
 			
 			success: function(msg){
 				alert(msg);
