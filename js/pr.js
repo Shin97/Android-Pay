@@ -1,6 +1,6 @@
-var products = [{name:'Playstation 4', price:12900},
-                 {name:'Playstation VR', price:9900},
-                 {name:'折價$1000', price:-1000}];
+var products = [{name:'Playstation 4', price:1},
+                 {name:'Playstation VR', price:1},
+                 {name:'折價', price:-1}];
 var total = 0;
 products.forEach( function(element) {
   total += element.price;
@@ -43,12 +43,20 @@ function buildPaymentRequest() {
         value: total,
       },
     },
+
     displayItems: [],
+
+    shippingOptions: [{
+      id: 'freeShippingOption',
+      label: 'Free worldwide shipping',
+      amount: {currency: 'TWD', value: '0.00'},
+      selected: true
+    }]
   };
 
   //設定要向用戶收取運費的電子郵件，地址和類型
   const options = {
-    requestShipping: false,
+    requestShipping: true,
     requestPayerEmail: false
   };
 
@@ -84,34 +92,6 @@ function buildPaymentRequest() {
 }
 
 let request = buildPaymentRequest();
-//根據用戶所在的地區配置貨運類型
-request.addEventListener('shippingaddresschange', function(evt) {
-  evt.updateWith(new Promise(function(resolve) {
-
-    const shippingOption = {
-      id: '',
-      label: '',
-      amount: {currency: 'TWD', value: '0'},
-      selected: true
-    };
-
-    if (request.shippingAddress.country === '桃園市') {
-      shippingOption.id = 'mg';
-      shippingOption.label = '免運費';
-      details.total.amount.value = '1';
-    } else {
-      shippingOption.id = 'world';
-      shippingOption.label = '快遞';
-      shippingOption.amount.value = '5';
-      details.total.amount.value = '6';
-    }
-
-    details.displayItems.splice(2, 1, shippingOption);
-    details.shippingOptions = [shippingOption];
-
-    resolve(details);
-  }));
-});
 
 /**
  * Launches payment request that does not require shipping.
