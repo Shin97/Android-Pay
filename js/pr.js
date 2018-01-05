@@ -122,6 +122,34 @@ function buildPaymentRequest() {
 }
 
 let request = buildPaymentRequest();
+//根據用戶所在的地區配置貨運類型
+request.addEventListener('shippingaddresschange', function(evt) {
+  evt.updateWith(new Promise(function(resolve) {
+
+    const shippingOption = {
+      id: '',
+      label: '',
+      amount: {currency: 'TWD', value: '0'},
+      selected: true
+    };
+
+    if (request.shippingAddress.region === '桃園市') {
+      shippingOption.id = 'mg';
+      shippingOption.label = '免運費';
+      details.total.amount.value = '1';
+    } else {
+      shippingOption.id = 'world';
+      shippingOption.label = '快遞';
+      shippingOption.amount.value = '5';
+      details.total.amount.value = '6';
+    }
+
+    details.displayItems.splice(2, 1, shippingOption);
+    details.shippingOptions = [shippingOption];
+
+    resolve(details);
+  }));
+});
 
 /**
  * Launches payment request that does not require shipping.
