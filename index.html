@@ -137,6 +137,7 @@
     paymentsClient.loadPaymentData(paymentDataRequest)
         .then(function(paymentData) {
           // handle response
+          console.log('Handle response')
           processPayment(paymentData);
         })
         .catch(function(err) {
@@ -152,7 +153,6 @@
    * @see {@link https://developers.google.com/payments/web/object-reference##paymentdata|PaymentData object reference}
    */
   function processPayment(paymentData) {
-    info(paymentData)
     console.log(paymentData);
   }
   </script>
