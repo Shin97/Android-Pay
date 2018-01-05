@@ -82,14 +82,11 @@
       // a merchant ID is available after approval by Google
       merchantId: '02510116604241796260',
       paymentMethodTokenizationParameters: {
-        tokenizationType: 'PAYMENT_GATEWAY',
+        tokenizationType: 'DIRECT',
         // Check with your payment gateway on the parameters to pass.
         // @see {@link https://developers.google.com/payments/web/object-reference#gateway}
         parameters: {
-          'gateway': 'stripe',
-          //公用key
-          'stripe:publishableKey': 'pk_live_fD7ggZCtrB0vJNApRX5TyJ9T',
-          'stripe:version': '2016-07-06'
+          publicKey: 'BATC0ycpppkbDV3QsZG0SRQkiE5vMIBReUlY3nIHBpiGdfIGQ+dZrbVC+n0SweoRBT3u4BEW7kXwqEtaWe1zz+o='
         }
       },
       allowedPaymentMethods: allowedPaymentMethods,
