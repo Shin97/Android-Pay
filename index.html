@@ -29,6 +29,7 @@
   <pre id="msg"></pre>
   <!-- <img src="https://developers.google.com/payments/images/brand-guidelines/payment-screen.png"> -->
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script>
   var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
   var allowedCardNetworks = [ 'MASTERCARD', 'VISA', 'JCB' ];
@@ -151,12 +152,12 @@
    */
   function processPayment(paymentData) {
     console.log(paymentData);
-    var URLs="https://www.gift2u.com.tw/skm/api/api.android_pay.php";
+    var URLs="/website/api/api.android_pay.php";
 		$.ajax({
 			url: URLs,
-			data: {"JSON":paymentData},
+			data: {"JSON":JSON.stringify(paymentData)},
 			type:"POST",
-			dataType:'json',
+			dataType:'text',
 			
 			success: function(msg){
 				alert(msg);
