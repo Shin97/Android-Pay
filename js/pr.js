@@ -133,7 +133,7 @@ request.addEventListener('shippingaddresschange', function(evt) {
       selected: true
     };
 
-    if (request.shippingAddress.region === '桃園市') {
+    if (request.shippingAddress.country === '桃園市') {
       shippingOption.id = 'mg';
       shippingOption.label = '免運費';
       details.total.amount.value = '1';
