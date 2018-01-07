@@ -18,21 +18,21 @@
 
   <p id="feedback" style="color: red;"></p>
   <!-- <button onclick="onBuyClicked()"><img src="image/GPay_button-long.png" width="128" height="35"></button> -->
-  <input type="button" onclick="onBuyClicked()" style="background-image:url(image/G_Pay.png);width:320px;height:132px;border: 2px solid #ccc;border-radius: 10px;">
+  <!-- <input type="button" onclick="onBuyClicked()" style="background-image:url(image/G_Pay.png);width:320px;height:132px;border: 2px solid #ccc;border-radius: 10px;">
   <script src="js/pr.js" async></script>
-  <script src="js/util.js"></script>
+  <script src="js/util.js"></script> -->
 
   <div id="container">
-    <button>Checkout</button>
   </div>
 
   <!-- pr.js error message -->
   <pre id="msg"></pre>
   <!-- <img src="https://developers.google.com/payments/images/brand-guidelines/payment-screen.png"> -->
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script>
   var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
-  var allowedCardNetworks = ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA'];
+  var allowedCardNetworks = [ 'MASTERCARD', 'VISA', 'JCB' ];
   
   /**
    * Initialize a Google Payment API client
@@ -57,7 +57,6 @@
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          error(JSON.stringify(err))
           console.error(err);
         });
   }
@@ -84,14 +83,11 @@
       // a merchant ID is available after approval by Google
       merchantId: '02510116604241796260',
       paymentMethodTokenizationParameters: {
-        tokenizationType: 'PAYMENT_GATEWAY',
+        tokenizationType: 'DIRECT',
         // Check with your payment gateway on the parameters to pass.
         // @see {@link https://developers.google.com/payments/web/object-reference#gateway}
         parameters: {
-          'gateway': 'stripe',
-          //公用key
-          'stripe:publishableKey': 'pk_live_fD7ggZCtrB0vJNApRX5TyJ9T',
-          'stripe:version': '2016-07-06'
+          publicKey: 'BATC0ycpppkbDV3QsZG0SRQkiE5vMIBReUlY3nIHBpiGdfIGQ+dZrbVC+n0SweoRBT3u4BEW7kXwqEtaWe1zz+o='
         }
       },
       allowedPaymentMethods: allowedPaymentMethods,
@@ -139,11 +135,11 @@
     paymentsClient.loadPaymentData(paymentDataRequest)
         .then(function(paymentData) {
           // handle response
+          console.log('Handle response')
           processPayment(paymentData);
         })
         .catch(function(err) {
           // show error in developer console for debugging
-          error(JSON.stringify(err))
           console.error(err);
         });
   }
@@ -155,8 +151,23 @@
    * @see {@link https://developers.google.com/payments/web/object-reference##paymentdata|PaymentData object reference}
    */
   function processPayment(paymentData) {
-    info(paymentData)
     console.log(paymentData);
+    var URLs="/website/api/api.android_pay.php";
+		$.ajax({
+			url: URLs,
+			data: {"JSON":JSON.stringify(paymentData)},
+			type:"POST",
+			dataType:'text',
+			
+			success: function(msg){
+				alert(msg);
+			},
+
+			error:function(xhr, ajaxOptions, thrownError){ 
+			alert(xhr.status);
+			alert(thrownError);
+			}
+		});
   }
   </script>
   <script async

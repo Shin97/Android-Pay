@@ -1,6 +1,6 @@
-var products = [{name:'Playstation 4', price:12900},
-                 {name:'Playstation VR', price:9900},
-                 {name:'折價$1000', price:-1000}];
+var products = [{name:'Playstation 4', price:1},
+                 {name:'Playstation VR', price:1},
+                 {name:'折價', price:-1}];
 var total = 0;
 products.forEach( function(element) {
   total += element.price;
@@ -20,6 +20,7 @@ function buildPaymentRequest() {
     data: {
       merchantName: 'Rouslan Solomakhin',
       merchantId: '00184145120947117657',
+      environment: 'TEST',
       allowedCardNetworks: ['AMEX', 'MASTERCARD', 'VISA', 'DISCOVER'],
       paymentMethodTokenizationParameters: {
         tokenizationType: 'GATEWAY_TOKEN',
@@ -42,46 +43,21 @@ function buildPaymentRequest() {
         value: total,
       },
     },
+
     displayItems: [],
-    modifiers: [{
-      supportedMethods: ['basic-card'],
-      data: {
-        supportedTypes: ['debit'],
-      },
-      total: {
-        label: 'Debit card discounted donation',
-        amount: {
-          currency: 'TWD',
-          value: '45.00',
-        },
-      },
-      additionalDisplayItems: [{
-        label: 'Debit card discount',
-        amount: {
-          currency: 'TWD',
-          value: '-10.00',
-        },
-      }],
-    }, {
-      supportedMethods: ['basic-card'],
-      data: {
-        supportedNetworks: ['mastercard'],
-      },
-      total: {
-        label: 'MasterCard discounted donation',
-        amount: {
-          currency: 'TWD',
-          value: '50.00',
-        },
-      },
-      additionalDisplayItems: [{
-        label: 'MasterCard discount',
-        amount: {
-          currency: 'TWD',
-          value: '-5.00',
-        },
-      }],
-    }],
+
+    shippingOptions: [{
+      id: 'freeShippingOption',
+      label: 'Free worldwide shipping',
+      amount: {currency: 'TWD', value: '0.00'},
+      selected: true
+    }]
+  };
+
+  //設定要向用戶收取運費的電子郵件，地址和類型
+  const options = {
+    requestShipping: true,
+    requestPayerEmail: false
   };
 
   //填訂單資料
@@ -100,7 +76,7 @@ function buildPaymentRequest() {
   let request = null;
 
   try {
-    request = new PaymentRequest(supportedInstruments, details);
+    request = new PaymentRequest(supportedInstruments, details, options);
     if (request.canMakePayment) {
       request.canMakePayment().then(function(result) {
         info(result ? 'Can make payment' : 'Cannot make payment');
